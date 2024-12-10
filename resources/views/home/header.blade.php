@@ -14,7 +14,7 @@
             <ul>
                 <li><a href="{{url('show_wishlist')}}"><i class="fa fa-heart"></i> <span>{{ $wishlistCount }}</span></a></li>
                 <li><a href="{{url('show_cart')}}"><i class="fa fa-shopping-bag"></i> <span>{{ $cartCount }}</span></a></li>
-                <li><a href="{{ url('/chatify') }}"><i class="fa fa-comment"></i> <span>1</span></a></li>
+                <li><a onclick="openChatChoiceModal()"><i class="fa fa-comment"></i> <span>{{ $newMessagesCount }}</span></a></li>
             </ul>
         </div>
 
@@ -187,7 +187,7 @@
                         <ul>
                             <li><a href="{{url('show_wishlist')}}"><i class="fa fa-heart"></i> <span>{{ $wishlistCount }}</span></a></li>
                             <li><a href="{{url('show_cart')}}"><i class="fa fa-shopping-bag"></i> <span>{{ $cartCount }}</span></a></li>
-                            <li><a href="{{ url('/chatify') }}"><i class="fa fa-comment"></i> <span>{{ $newMessagesCount }}</span></a></li>
+                            <li><a onclick="openChatChoiceModal()"><i class="fa fa-comment"></i> <span>{{ $newMessagesCount }}</span></a></li>
                         </ul>
                         
                     </div>
@@ -199,6 +199,43 @@
         </div>
     </header>
     <!-- Header Section End -->
+    <div class="modal fade" id="chatChoiceModal" tabindex="-1" role="dialog" aria-labelledby="chatChoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="chatChoiceModalLabel">Choose who you want to chat with</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Select one of the following options:</p><br><br>
+              <!-- Admin Button -->
+              <div class="row mb-3">
+                <!-- Delivery Rider Button (Left) -->
+                <div class="col-md-6">
+                    <button class="btn btn-success w-100" style="height: 60px;" onclick="startChat(6)">
+                        <i class="fa fa-bicycle mr-2"></i> Delivery Rider
+                    </button>
+                </div>
+            
+                <!-- Admin Button (Right) -->
+                <div class="col-md-6">
+                    <button class="btn w-100" style="height: 60px; background-color: #EDBB0E; color: #fff;" onclick="startChat(1)">
+                        <i class="fa fa-user mr-2"></i> Admin
+                    </button>
+                </div>
+            </div>            
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
 
 </div>
 
@@ -230,5 +267,22 @@ window.addEventListener('scroll', () => {
     }, 3000);
 });
 
+function openChatChoiceModal() {
+        $('#chatChoiceModal').modal('show');
+    }
 
+    // Function to start chat with chosen user (admin or delivery rider)
+    function startChat(userType) {
+        // Close the modal
+        $('#chatChoiceModal').modal('hide');
+
+        // Redirect to the Chatify URL based on the user's choice
+        if (userType === 1) {
+            // If the user chooses admin (ID 1)
+            window.location.href = "{{ url('/chatify/1') }}"; // Admin's Chatify URL
+        } else if (userType === 6) {
+            // If the user chooses delivery rider (ID 2)
+            window.location.href = "{{ url('/chatify/6') }}"; // Delivery rider's Chatify URL
+        }
+    }
 </script>

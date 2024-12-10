@@ -136,7 +136,7 @@
 
                                 <?php $totalprice=0; ?>
 
-                                @foreach ($cart as $cart)
+                                @forelse ($cart as $cart)
                                 
                                 <tr>
                                     <td class="shoping__cart__item" style="display: flex; align-items: center;">
@@ -191,7 +191,14 @@
 
                                 <?php $totalprice=$totalprice + $cart->price ?>
 
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <i class="fa fa-shopping-bag" style="font-size: 24px; color: grey;" title="No deliveries available"></i>
+                                        <p>No Products on the Cart at the moment.</p>
+                                    </td>
+                                </tr>
+                            @endforelse
 
                             </tbody>
                         </table>
