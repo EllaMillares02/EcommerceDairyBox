@@ -146,7 +146,16 @@ class HomeController extends Controller
     }
     public function userProfile()
 {
-    return view('home.show_profile'); // Adjust this based on your view
+    $product = Product::limit(8)->where('status', 'yes')->get();
+    $category = Category::all();
+    $categories = Product::select('category')->groupBy('category')->selectRaw('count(*) as product_count')->orderByDesc('product_count')->take(4)->get();
+    $latestProducts = Product::where('product_group', 'latest')->get();
+    $topProducts = Product::where('product_group', 'top_rated')->get();
+    $reviewProducts = Product::where('product_group', 'review_product')->get();
+    $banners = Banner::all();
+
+    return view('home.userpage',compact('product', 'category', 
+        'latestProducts', 'topProducts', 'reviewProducts', 'categories', 'banners'));
 }
 public function saveProfile(Request $request)
 {
@@ -186,7 +195,7 @@ public function saveProfile(Request $request)
     public function redirect(){
         
         $usertype=Auth::user()->usertype;
-
+        
         if($usertype=='1'){
 
             $total_prod=product::all()->count();
@@ -931,4 +940,5 @@ public function send(Request $request)
         // Return a success response or redirect
         return redirect()->back()->with('success', 'Message sent successfully!');
     }
+
 }

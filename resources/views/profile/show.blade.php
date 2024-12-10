@@ -1,8 +1,14 @@
+
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight" style="font-size: 36px;">
+            {{ __('User Profile') }}
         </h2>
+        
+        <a href="{{ route('home.userpage') }}" class="text-blue-500" style="color: #fff; background-color: #EDBB0E; padding: 5px;">
+            {{ __('Back to Home') }}
+        </a>
+
     </x-slot>
 
     <div>
