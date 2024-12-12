@@ -279,10 +279,10 @@ function openChatChoiceModal() {
         // Redirect to the Chatify URL based on the user's choice
         if (userType === 1) {
             // If the user chooses admin (ID 1)
-            window.location.href = "{{ url('/chatify/admin') }}"; // Admin's Chatify URL
+            window.location.href = "{{ url('/chatify/1') }}"; // Admin's Chatify URL
         } else if (userType === 6) {
             // If the user chooses delivery rider (ID 2)
-            window.location.href = "{{ url('/chatify/rider') }}"; // Delivery rider's Chatify URL
+            window.location.href = "{{ url('/chatify/6') }}"; // Delivery rider's Chatify URL
         }
     }
 </script>
