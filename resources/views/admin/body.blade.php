@@ -21,7 +21,7 @@
                     <div class="app-card-body p-3 p-lg-4">
                         <h4 class="stats-type mb-1">Products near expiry</h4>
                         <div class="stats-figure" style="color: red;">{{ $expiring_soon_count }}</div>
-                    </div><!--//app-card-body-->
+                    </div>
                     <a class="app-card-link-mask" href="#"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
