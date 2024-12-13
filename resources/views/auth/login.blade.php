@@ -56,7 +56,7 @@
 
             <div class="flex items-center justify-center mt-4">
                 <a href="{{ url('auth/google') }}" 
-                   class="flex items-center bg-white border border-gray-300 text-gray-700 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-gray-100">
+                   class="flex items-center bg-white border border-gray-300 text-gray-700 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-success-100">
                     <!-- Google "G" Logo SVG -->
                     <svg class="w-5 h-5 mr-2" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
                         <path fill="#4285F4" d="M120,76.1c0-3.1-0.3-6.3-0.8-9.3H75.9v17.7h24.8c-1,5.7-4.3,10.7-9.2,13.9l14.8,11.5C115,101.8,120,90,120,76.1L120,76.1z"/>
