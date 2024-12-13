@@ -189,7 +189,7 @@ public function saveProfile(Request $request)
     $user->save();
 
     // Redirect with a success message
-    return redirect()->route('/')->with('success_message', 'Profile updated successfully!');
+    return redirect()->route('/index')->with('success_message', 'Profile updated successfully!');
 }
 
     public function redirect(){
@@ -547,6 +547,8 @@ public function checkout(Request $request)
                             ? json_decode($request->input('selected_products'), true) 
                             : [];
         // Pass user data and selected products to the checkout view
+        $productName = $request->input('productName');
+        $productPrice = $request->input('product_price');
         $discountAmount = $request->input('discount', 0); // Get the discount value
 
 
@@ -554,6 +556,8 @@ public function checkout(Request $request)
             'user' => $user,
             'selectedProducts' => $selectedProducts,
             'discountAmount' => $discountAmount,
+            'productName' => $productName,
+            'productPrice' => $productPrice,
         ]);
     } else {
         return redirect('login_page');
