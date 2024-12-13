@@ -38,9 +38,9 @@ return [
         'client_id' => '1021774540442-etlh9rqfunkhqdfgspj5v8c86ham70ib.apps.googleusercontent.com',
         'client_secret' => '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',
 
-        'redirect' => 'http://localhost:8000/auth/google/callback',
+        'redirect' => 'https://ecommercedairybox.bsitcps.com/auth/google/callback',
         'guzzle' => [
-        'verify' => false,  // Only for local testing
+        'verify' => true,  // false if for local testing
     ],
     ],
 ];
