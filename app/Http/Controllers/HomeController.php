@@ -189,7 +189,7 @@ public function saveProfile(Request $request)
     $user->save();
 
     // Redirect with a success message
-    return redirect('index')->with('success_message', 'Profile updated successfully!');
+    return redirect('/')->with('success_message', 'Profile updated successfully!');
 }
 
     public function redirect(){
