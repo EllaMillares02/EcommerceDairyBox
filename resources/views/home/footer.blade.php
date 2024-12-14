@@ -5,7 +5,7 @@
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__about__logo">
-                        <a href="./index.html"><img src="img/logoPabuy.png" alt=""></a>
+                        <a href="{{url('/')}}"><img src="img/logoPabuy.png" alt=""></a>
                     </div>
                     <ul>
                         <li>Address: Albay Farmers' Bounty Village, Camalig, 4502 Albay</li>
