@@ -180,7 +180,7 @@
                                         </ul>
                                     </th>
                                     <td class="shoping__cart__item__close">
-                                        <a href="{{url('/remove_wishlist',$wishlist->id)}}" onclick="return confirm('Are you sure to remove this product?')">
+                                        <a href="{{url('/remove_wishlist',$wishlist->id)}}" onclick="event.preventDefault(); confirmRemove('{{ url('/remove_wishlist', $wishlist->id) }}')">
                                             <span class="icon_close"></span></a>
                                     </td>
                                 </tr>
@@ -212,6 +212,24 @@
     <script src="home/js/mixitup.min.js"></script>
     <script src="home/js/owl.carousel.min.js"></script>
     <script src="home/js/main.js"></script>
+    <script>
+        function confirmRemove(url) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to remove this product from your cart?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+    </script>
 
 </body>
 

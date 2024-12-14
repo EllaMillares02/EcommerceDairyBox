@@ -82,6 +82,20 @@
     </section>
     <!-- Hero Section End -->
     @include('sweetalert::alert')
+
+    @if(session('success_message'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Item Removed!',
+                text: '{{ session('success_message') }}',
+                confirmButtonText: 'OK',
+            });
+        });
+    </script>
+@endif
+
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
         <div class="container">
@@ -180,7 +194,7 @@
                                         ₱{{$cart->price}}
                                     </td>
                                     <td class="shoping__cart__item__close">
-                                        <a href="{{url('/remove_cart',$cart->id)}}" onclick="return confirm('Are you sure to remove this product?')">
+                                        <a href="{{url('/remove_cart',$cart->id)}}" onclick="event.preventDefault(); confirmRemove('{{ url('/remove_cart', $cart->id) }}')">
                                             <span class="icon_close"></span></a>
                                     </td>
                                 </tr>
@@ -300,6 +314,23 @@
     });
 });
 
+function confirmRemove(url) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to remove this product from your cart?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+    
     </script>
 
     
