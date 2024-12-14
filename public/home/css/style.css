@@ -4053,10 +4053,13 @@ ol {
 }
 
 .circle-icon:hover {
-    background-color: #f8f1da;
-    color: #EDBB0E;
+    background-color: #fff;
+	color: #E9A625;
 }
 
+.circle-icon i:hover {
+    color: #E9A625;
+}
 
 
 .order-tracking {
