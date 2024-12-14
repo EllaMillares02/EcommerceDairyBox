@@ -389,7 +389,7 @@ public function saveProfile(Request $request)
                 ->where('product_id', $product->id)
                 ->delete();
 
-            return redirect()->back();
+            return redirect('show_cart');
         } else {
             return redirect('login_page');
         }
@@ -505,7 +505,7 @@ public function add_wishlist(Request $request, $id){
             $wish->save(); 
         }
 
-        return redirect()->back();
+        return redirect('show_wishlist');
     } else {
         return redirect('login_page');
     }
