@@ -888,12 +888,12 @@ public function contact(){
 public function search_page(Request $request)
 {
     $query = $request->input('query'); // Retrieve the search input
-    
+    $categories = Category::all();
     // Search for products where the 'name' field matches the query
     $results = product::where('title', 'like', '%' . $query . '%')->get();
 
     // Pass results to the search results view
-    return view('home.search_page', compact('results', 'query'));
+    return view('home.search_page', compact('results', 'query', 'categories'));
 }
 public function categories_page(Request $request)
 {
