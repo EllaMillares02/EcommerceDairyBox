@@ -137,11 +137,22 @@
                         <div id="pickup-location" style="display: none;">
                             <label for="location">Enter Meet-up Location:</label><br>
                             <small style="color: red;">Note: Meet Up location must be along the road only</small>
+                            
+                            <!-- Input for address -->
                             <div class="checkout__input">
                                 <input type="text" id="location" name="meetup_location" placeholder="Enter your pickup location" oninput="fetchSuggestions()" required>
                             </div>
+                        
+                            <!-- Suggestions list (hidden initially) -->
                             <ul id="suggestions-list" style="display: none; border: 1px solid #ddd; max-height: 150px; overflow-y: auto; padding: 0; list-style: none;"></ul>
+                        
+                            <!-- Map container -->
+                            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+                            
+                            <!-- Button to confirm location -->
+                            <button id="confirm-location" style="display: none;">Confirm Location</button>
                         </div>
+                        
 
                         <div id="deliveryDate" style="display: none;">
                         <label for="delivery-date" style="font-size: 1.6rem">Choose Delivery Date:</label><br>
@@ -266,6 +277,8 @@
     <script src="home/js/owl.carousel.min.js"></script>
     <script src="home/js/main.js"></script>
     <script src="home/js/location.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChM5RFa_lzvr4pTBiaAK04zUkJez78_R0&libraries=places&callback=initMap" async defer></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const confirmOrderButton = document.getElementById('confirmOrderButton');
@@ -319,6 +332,93 @@
 
             });
         });
+
+        let map;
+let marker;
+let autocomplete;
+let geocoder;
+let confirmedLocation = false;
+
+function initMap() {
+    // Initialize map and geocoder
+    geocoder = new google.maps.Geocoder();
+    const initialPosition = { lat: 13.4112, lng: 123.2265 }; // Default to Albay, Philippines (adjust as needed)
+    
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: initialPosition,
+        zoom: 14,
+    });
+
+    marker = new google.maps.Marker({
+        map: map,
+        draggable: true, // Allow the user to drag the marker
+        position: initialPosition,
+    });
+
+    // Initialize Google Places Autocomplete for both geocode and establishment types
+    autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("location"),
+        {
+            types: ["geocode", "establishment"], // Include both geocode (address) and establishment (business/places)
+            componentRestrictions: { country: "ph" }, // Restrict to the Philippines
+        }
+    );
+
+    autocomplete.addListener("place_changed", onPlaceChanged);
+}
+
+// Function triggered when an address or place is selected
+function onPlaceChanged() {
+    const place = autocomplete.getPlace();
+
+    if (!place.geometry) {
+        // No geometry (if place is not valid)
+        alert("Please select a valid location from the suggestions.");
+        return;
+    }
+
+    // Update map center and marker position
+    const position = place.geometry.location;
+    map.setCenter(position);
+    marker.setPosition(position);
+    
+    // Show the confirm button
+    document.getElementById("confirm-location").style.display = "inline-block";
+    
+    // Enable the confirm location button
+    confirmedLocation = false;
+}
+
+// Function to confirm location
+document.getElementById("confirm-location").addEventListener("click", function() {
+    // Get the final location
+    const latLng = marker.getPosition();
+    geocoder.geocode({ location: latLng }, (results, status) => {
+        if (status === "OK" && results[0]) {
+            // Set the confirmed location in the input field
+            document.getElementById("location").value = results[0].formatted_address;
+            confirmedLocation = true;
+            alert("Location confirmed!");
+        } else {
+            alert("Failed to get location details.");
+        }
+    });
+});
+
+// Function to fetch suggestions (can be expanded as per your requirement)
+function fetchSuggestions() {
+    const input = document.getElementById("location").value;
+    const suggestionsList = document.getElementById("suggestions-list");
+
+    // Show/hide suggestions based on input
+    if (input.length > 0) {
+        suggestionsList.style.display = "block";
+        // You can call an API to fetch suggestions, or handle it with autocomplete as needed
+    } else {
+        suggestionsList.style.display = "none";
+    }
+}
+
         </script>
         
 
