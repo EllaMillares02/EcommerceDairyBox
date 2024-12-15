@@ -424,21 +424,42 @@ public function saveProfile(Request $request)
         return redirect()->back();
     }
 
-    public function update_cart(Request $request){
-     $cartItem = cart::find($request->id);
-    
+   public function update_cart(Request $request)
+{
+    // Find the cart item
+    $cartItem = Cart::find($request->id);
+
     if ($cartItem) {
+        // Update the quantity
         $cartItem->quantity = $request->quantity;
 
+        // Update the price based on product price and quantity
         if ($cartItem->product_price) {
             $cartItem->price = $cartItem->product_price * $request->quantity;
         }
 
+        // Save the updated cart item
         $cartItem->save();
-        return response()->noContent();
+
+        // Calculate the updated cart total for the user
+        $cartTotal = Cart::where('user_id', Auth::user()->id)
+            ->sum(DB::raw('quantity * product_price'));
+
+        // Return a response with the updated product subtotal and cart total
+        return response()->json([
+            'success' => true,
+            'productSubtotal' => number_format($cartItem->price), // Updated price for the product
+            'cartTotal' => number_format($cartTotal), // Updated total for the cart
+        ]);
     }
-    return response()->json(['message' => 'Cart item not found.'], 404);
+
+    // If the cart item is not found, return a 404 response
+    return response()->json([
+        'success' => false,
+        'message' => 'Cart item not found.',
+    ], 404);
 }
+
 
 public function add_wishlist(Request $request, $id){
     if (Auth::id()) {
@@ -547,17 +568,36 @@ public function checkout(Request $request)
                             ? json_decode($request->input('selected_products'), true) 
                             : [];
         // Pass user data and selected products to the checkout view
+        $productID = $request->input('product_id');
+        $qty = $request->input('quantity');
+        $image = $request->input('image');
         $productName = $request->input('productName');
         $productPrice = $request->input('product_price');
         $discountAmount = $request->input('discount', 0); // Get the discount value
 
-
+        if (empty($selectedProducts)) {
+            $productID = $request->input('product_id');
+            $qty = $request->input('quantity');
+            $image = $request->input('image');
+            $productName = $request->input('productName');
+            $productPrice = $request->input('product_price');
+            $discountAmount = $request->input('discount', 0); // Get the discount value
+        
+            $selectedProducts[] = [
+                'title' => $productName,
+                'price' => $productPrice,
+                'quantity' => $qty,
+                'prod_id' => $productID,
+                'img' => $image,
+                'discount' => $discountAmount,
+            ];
+        }
+        
         return view('home.checkout', [
             'user' => $user,
             'selectedProducts' => $selectedProducts,
             'discountAmount' => $discountAmount,
-            'productName' => $productName,
-            'productPrice' => $productPrice,
+
         ]);
     } else {
         return redirect('login_page');
@@ -615,12 +655,15 @@ public function save_orders(Request $request)
     $order->save();
 
     // Remove the products from the user's cart
-    foreach ($products as $productData) {
-        $product = json_decode($productData, true);
+    if (!empty($product['cart_id'])) {
+        // Fetch the cart item
         $cartItem = Cart::where('id', $product['cart_id'])->where('user_id', $userid)->first();
+
+        // If cart item exists, delete it
         if ($cartItem) {
-            $cartItem->delete(); 
+            $cartItem->delete();
         }
+    } else {
 
     $productInDb = product::find($product['prod_id']);
         if ($productInDb) {

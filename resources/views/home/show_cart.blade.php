@@ -190,8 +190,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="shoping__cart__total">
-                                        ₱{{$cart->price}}
+                                    <td class="shoping__cart__total product-total-{{ $cart->id }}">
+                                        ₱<span>{{ $cart->price }}</span>
                                     </td>
                                     <td class="shoping__cart__item__close">
                                         <a href="{{url('/remove_cart',$cart->id)}}" onclick="event.preventDefault(); confirmRemove('{{ url('/remove_cart', $cart->id) }}')">

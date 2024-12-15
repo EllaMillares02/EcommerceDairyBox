@@ -230,37 +230,52 @@
     Quantity change
 --------------------- */
 var proQty = $('.pro-qty');
+
+// Add increment and decrement buttons
 proQty.prepend('<span class="dec qtybtn">-</span>');
 proQty.append('<span class="inc qtybtn">+</span>');
+
+// Handle quantity change
 proQty.on('click', '.qtybtn', function () {
     var $button = $(this);
     var $input = $button.parent().find('input');
-    var oldValue = $input.val();
+    var oldValue = parseInt($input.val(), 10);
     var productId = $input.data('product-id').replace('acc-', '');
-
     var newVal;
+
+    // Increment or decrement quantity
     if ($button.hasClass('inc')) {
-        newVal = parseFloat(oldValue) + 1;
+        newVal = oldValue + 1;
     } else {
-        // Don't allow decrementing below zero
-        newVal = oldValue > 0 ? parseFloat(oldValue) - 1 : 0;
+        newVal = oldValue > 1 ? oldValue - 1 : 1; // Prevent going below 1
     }
+
+    // Update input value
     $input.val(newVal);
 
+    // Send AJAX request to update cart
     $.ajax({
-        url: '/update_cart', 
+        url: '/update_cart',
         method: 'POST',
         data: {
             id: productId,
             quantity: newVal,
-            _token: $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
+            _token: $('meta[name="csrf-token"]').attr('content') // Laravel CSRF token
         },
-        success: function(response) {
-            location.reload();
+        success: function (response) {
+            if (response.success) {
+                // Update the product price dynamically
+                $('.product-total-' + productId + ' span').text(response.productSubtotal);
+
+                // Update the cart total dynamically
+                $('.cart-total').text(response.cartTotal);
+            } else {
+                alert('Failed to update cart. Please try again.');
+            }
         },
-        error: function(xhr, status, error) {
-            // Handle error
+        error: function (xhr, status, error) {
             console.error('Error updating cart:', error);
+            alert('An error occurred while updating the cart. Please try again.');
         }
     });
 });
