@@ -138,10 +138,10 @@
                                         <th class="cell">Total</th>
                                         <th class="cell">Status</th>
                                         <th class="cell">Order Date</th>
-                                        <th class="cell">Delivery Date</th>
+                                        <th class="cell">Pickup Date</th>
                                         <th class="cell">Meetup Location</th>
                                         <th class="cell"></th>
-                                        <th class="cell">To Cancel</th>
+                                        <th class="cell">Remaining Time for Pickup</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -186,7 +186,16 @@
                                                 View
                                             </a>
                                         </td>
-                                        <td class="cell" style="color: red;"><small>This will be cancelled if not <br> pick-up from 8 am to 5 pm today.</small></td>
+                                        <td class="cell" style="color: red;">
+                                                <span id="countdown"></span><br>
+
+                                                <a id="cancelButton" class="btn-sm btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#cancelModal"
+                                                    data-order-id="{{ $orders->id }}" data-order-time="{{ $orders->created_at }}"
+                                                    onclick="openCancelModal(event, this)"
+                                                    >Cancel Order</a>
+
+                                                <span class="tooltip-text">Cancellation is only available within 24 hours of ordering.</span>
+                                        </td>                                        
                                     </tr>
                                     @empty
                                         <tr>
@@ -271,7 +280,7 @@
                                                 <a id="cancelButton" class="btn-sm btn-danger" href="#" data-bs-toggle="modal" data-bs-target="#cancelModal"
                                                     data-order-id="{{ $orders->id }}" data-order-time="{{ $orders->created_at }}"
                                                     onclick="openCancelModal(event, this)"
-                                                    >Cancel</a>
+                                                    >Cancel Order</a>
 
                                                 <span class="tooltip-text">Cancellation is only available within 24 hours of ordering.</span>
 
@@ -312,6 +321,7 @@
                                             <th class="cell">Delivery Date</th>
                                             <th class="cell">Meetup Location</th>
                                             <th class="cell">Proof of Delivery</th>
+                                            <th class="cell"></th>
                                             <th class="cell">Order</th>
                                             <th class="cell">Rate Now</th>
                                         </tr>
@@ -349,6 +359,21 @@
                                                     <small>No proof of delivery uploaded.</small>
                                                 @endif
 
+                                            </td>
+                                            <td class="cell">
+                                                <a 
+                                                    class="btn-sm app-btn-secondary view-order-btn" 
+                                                    href="#" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#orderDetailsModal"
+                                                    data-products="{{ $productsList }}"
+                                                    data-price="₱{{ $orders->price }}"
+                                                    data-status="{{ $orders->delivery_status }}"
+                                                    data-order-date="{{ $orders->created_at->format('m-d-Y h:i:s A') }}"
+                                                    data-delivery-date="{{ \Carbon\Carbon::parse($orders->delivery_date)->format('m-d-Y h:i:s A') }}"
+                                                    data-pickup="{{ $orders->pickup_location }}">
+                                                    View
+                                                </a>
                                             </td>
                                             <td class="cell">
                                                 @if($orders->delivery_status === 'received')
@@ -496,14 +521,19 @@
                       <p>Pending</p>
                     </div>
                     <div class="line"></div>
-                    <div class="step for-delivery">
+                    <div class="step for-accepted">
                       <div class="circle"><i class="fa fa-check"></i></div>
                       <p>Accepted</p>
                     </div>
                     <div class="line"></div>
-                    <div class="step completed">
+                    <div class="step for-delivery">
                       <div class="circle"><i class="fa fa-truck"></i></div>
-                      <p>Delivery</p>
+                      <small>For Delivery</small>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step completed">
+                      <div class="circle" style="margin-top: -10px;"><i class="fa fa-star"></i></div>
+                      <small>Completed</small>
                     </div>
                 </div>
     
@@ -571,11 +601,25 @@
                 document.querySelector('.pending').classList.add('active');
             } else if (status === 'for delivery') {
                 document.querySelector('.pending').classList.add('active');
+                document.querySelector('.for-accepted').classList.add('active');
                 document.querySelector('.for-delivery').classList.add('active');
                 document.querySelectorAll('.line').forEach(line => line.classList.add('active'));
-
+            }else if (status === 'for pickup'){
+                document.querySelector('.pending').classList.add('active');
+                document.querySelector('.for-accepted').classList.add('active');
+                document.querySelector('.for-delivery').classList.add('active');
+            }else if (status === 'completed') {
                 document.querySelector('.completed').classList.add('active');
                 document.querySelectorAll('.line').forEach(line => line.classList.add('active'));
+                document.querySelector('.pending').classList.add('active');
+                document.querySelector('.for-accepted').classList.add('active');
+                document.querySelector('.for-delivery').classList.add('active');
+            }else if (status === 'received') {
+                document.querySelector('.completed').classList.add('active');
+                document.querySelectorAll('.line').forEach(line => line.classList.add('active'));
+                document.querySelector('.pending').classList.add('active');
+                document.querySelector('.for-accepted').classList.add('active');
+                document.querySelector('.for-delivery').classList.add('active');
             }
         });
     });
@@ -623,6 +667,49 @@ function openCancelModal(event, buttonElement) {
     const modal = new bootstrap.Modal(document.getElementById('cancelModal'));
     modal.show();
 }
+document.addEventListener("DOMContentLoaded", function () {
+    // Set up the target time for 5 PM today (Philippines Time)
+    const now = new Date(); // Current date and time
+    const targetTime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        17, // 5 PM in 24-hour format
+        0,
+        0
+    );
+
+    const countdownElement = document.getElementById("countdown");
+
+    // Function to calculate and update the countdown
+    function updateCountdown() {
+        const currentTime = new Date();
+        const remainingTime = targetTime - currentTime;
+
+        // If the time has already passed, show a cancellation message
+        if (remainingTime <= 0) {
+            countdownElement.innerHTML = "Cancelled (time expired)";
+            countdownElement.style.color = "red"; // Optional: Highlight in red
+            return;
+        }
+
+        // Calculate hours, minutes, and seconds remaining
+        const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
+        const seconds = Math.floor((remainingTime / 1000) % 60);
+
+        // Format the time with leading zeros
+        countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Update the countdown every second
+    const timerInterval = setInterval(updateCountdown, 1000);
+
+    // Stop the timer when time expires
+    setTimeout(() => {
+        clearInterval(timerInterval);
+    }, targetTime - now); // Stop after target time passes
+});
 
     </script>
 </body>
