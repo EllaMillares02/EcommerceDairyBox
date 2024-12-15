@@ -260,7 +260,7 @@ proQty.on('click', '.qtybtn', function () {
         data: {
             id: productId,
             quantity: newVal,
-            _token: $('meta[name="csrf-token"]').attr('content') // Laravel CSRF token
+            _token: $('meta[name="csrf-token"]').attr('content') 
         },
         success: function (response) {
             if (response.success) {
