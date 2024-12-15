@@ -108,7 +108,7 @@
     <div class="col-lg-3 col-md-4 col-sm-6 mb-4 col-6">
         <div class="featured__item">
            
-            <div class="featured__item__pic set-bg" data-setbg="product/{{$products->image}}">
+            <div class="featured__item__pic set-bg" data-setbg="product/{{$products->image}}" ondblclick="redirectToProduct('{{ url('product_details', $products->id) }}')">
 
                 <div class="overlay" id="cart-overlay-{{ $products->id }}"  style="display: none;">
                     <form action="{{ url('add_cart', $products->id) }}" method="POST">
@@ -117,39 +117,42 @@
                         <input type="hidden" name="product_name" id="product-name-{{ $products->id }}" value="{{ $products->title }}">
                         <input type="hidden" name="product_price" id="product-price-{{ $products->id }}" value="{{ $products->price }}">
     
-                                            @if($products->flavors && $products->flavors->isNotEmpty())
-                                                <div class="flavors-section">
-                                                    <label>Select a Flavor:</label>
-                                                    <div class="flavors-buttons">
-                                                        @foreach($products->flavors as $index => $flavor)
-                                                            <label class="flavor-option">
-                                                                <input type="radio" name="selected_flavor" value="{{ $flavor->id }}" {{ $index === 0 ? 'checked' : '' }} 
-                                                                onclick="showSizesForFlavor({{ $flavor->id }})" required="">
-                                                                <span>{{ $flavor->name }}</span>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
+                        @if($products->flavors && $products->flavors->isNotEmpty())
+                        <div class="flavors-section">
+                            <label>Select a Flavor:</label>
+                            <div class="flavors-buttons">
+                                @foreach($products->flavors as $index => $flavor)
+                                    <label class="flavor-option">
+                                        <input type="radio" name="selected_flavor" value="{{ $flavor->id }}" {{ $index === 0 ? 'checked' : '' }} 
+                                        onclick="showSizesForFlavor({{ $flavor->id }})" required="">
+                                        <span>{{ $flavor->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                                            @if($products->sizes && $products->sizes->isNotEmpty())
-                                                <div class="sizes-section">
-                                                    <label>Select a Size:</label>
-                                                    <div class="sizes-buttons">
-                                                        @foreach($products->flavors as $flavor)
-                                                            <div class="flavor-sizes" id="sizes-for-flavor-{{ $flavor->id }}" style="display: none;">
-                                                                @foreach($flavor->sizes as $size)
-                                                                    <label class="size-option">
-                                                                        <input type="radio" name="selected_size" value="{{ $size->id }}" data-price="{{ $size->price }}"
-                                                                        onclick="updateProductInfo('{{ $products->id }}', '{{ $products->title }}', '{{ $flavor->name }}', '{{ $size->size }}', {{ $size->price }})" required="">
-                                                                        <span>{{ $size->size }}</span>
-                                                                    </label>
-                                                                @endforeach
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
+                    @if($products->sizes && $products->sizes->isNotEmpty())
+                        <div class="sizes-section">
+                            <label>Select a Size:</label>
+                            <div class="sizes-buttons">
+                                @foreach($products->flavors as $flavorIndex => $flavor)
+                                    <div class="flavor-sizes" id="sizes-for-flavor-{{ $flavor->id }}" 
+                                        style="display: {{ $flavorIndex === 0 ? 'block' : 'none' }};">
+                                        @foreach($flavor->sizes as $sizeIndex => $size)
+                                            <label class="size-option">
+                                                <input type="radio" name="selected_size" value="{{ $size->id }}" 
+                                                    data-price="{{ $size->price }}"
+                                                    onclick="updateProductInfo('{{ $products->id }}', '{{ $products->title }}', '{{ $flavor->name }}', '{{ $size->size }}', {{ $size->price }})" 
+                                                    {{ $flavorIndex === 0 && $sizeIndex === 0 ? 'checked' : '' }} required="">
+                                                <span>{{ $size->size }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                     
                             <input type="hidden" name="quantity" value="1" min="1">
                             <input type="submit" class="btn btn-warning btn-sm mt-2" value="ADD TO CART">
@@ -165,39 +168,42 @@
                         <input type="hidden" name="product_name" id="wishlist-product-name-{{ $products->id }}" value="{{ $products->title }}">
                         <input type="hidden" name="product_price" id="wishlist-product-price-{{ $products->id }}" value="{{ $products->price }}">
     
-                                            @if($products->flavors && $products->flavors->isNotEmpty())
-                                                <div class="flavors-section">
-                                                    <label>Select a Flavor:</label>
-                                                    <div class="flavors-buttons">
-                                                        @foreach($products->flavors as $index => $flavor)
-                                                            <label class="flavor-option">
-                                                                <input type="radio" name="selected_flavor" value="{{ $flavor->id }}" {{ $index === 0 ? 'checked' : '' }} 
-                                                                onclick="showSizesForFlavor({{ $flavor->id }})" required="">
-                                                                <span>{{ $flavor->name }}</span>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
+                        @if($products->flavors && $products->flavors->isNotEmpty())
+                        <div class="flavors-section">
+                            <label>Select a Flavor:</label>
+                            <div class="flavors-buttons">
+                                @foreach($products->flavors as $index => $flavor)
+                                    <label class="flavor-option">
+                                        <input type="radio" name="selected_flavor" value="{{ $flavor->id }}" {{ $index === 0 ? 'checked' : '' }} 
+                                        onclick="showSizesForFlavor({{ $flavor->id }})" required="">
+                                        <span>{{ $flavor->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                                            @if($products->sizes && $products->sizes->isNotEmpty())
-                                                <div class="sizes-section">
-                                                    <label>Select a Size:</label>
-                                                    <div class="sizes-buttons">
-                                                        @foreach($products->flavors as $flavor)
-                                                            <div class="flavor-sizes" id="wish-sizes-for-flavor-{{ $flavor->id }}" style="display: none;">
-                                                                @foreach($flavor->sizes as $size)
-                                                                    <label class="size-option">
-                                                                        <input type="radio" name="selected_size" value="{{ $size->id }}" data-price="{{ $size->price }}"
-                                                                        onclick="updateProductInfoForWishlist('{{ $products->id }}', '{{ $products->title }}', '{{ $flavor->name }}', '{{ $size->size }}', {{ $size->price }})" required="">
-                                                                        <span>{{ $size->size }}</span>
-                                                                    </label>
-                                                                @endforeach
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            @endif
+                    @if($products->sizes && $products->sizes->isNotEmpty())
+                        <div class="sizes-section">
+                            <label>Select a Size:</label>
+                            <div class="sizes-buttons">
+                                @foreach($products->flavors as $flavorIndex => $flavor)
+                                    <div class="flavor-sizes" id="wish-sizes-for-flavor-{{ $flavor->id }}" 
+                                        style="display: {{ $flavorIndex === 0 ? 'block' : 'none' }};">
+                                        @foreach($flavor->sizes as $sizeIndex => $size)
+                                            <label class="size-option">
+                                                <input type="radio" name="selected_size" value="{{ $size->id }}" 
+                                                    data-price="{{ $size->price }}"
+                                                    onclick="updateProductInfoForWishlist('{{ $products->id }}', '{{ $products->title }}', '{{ $flavor->name }}', '{{ $size->size }}', {{ $size->price }})" 
+                                                    {{ $flavorIndex === 0 && $sizeIndex === 0 ? 'checked' : '' }} required="">
+                                                <span>{{ $size->size }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                         <input type="hidden" name="quantity" value="1" min="1">
 
@@ -205,6 +211,53 @@
                             <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="hideOverlay(this)">Cancel</button>
                         </form>
                     </div>
+                    <div class="overlay" id="buy-overlay-{{ $products->id }}" style="display: none;">
+                        <form action="{{ url('/checkout') }}" method="POST" >
+                            @csrf
+                            <input type="hidden" name="quantity" value="1" min="1">
+                            <input type="hidden" name="image" value="/product/{{ $products->image }}">
+                            <input type="hidden" name="product_id" value="{{ $products->id }}">
+                            <input type="hidden" name="productName" id="buy-product-name-{{ $products->id }}" value="">
+                            <input type="hidden" name="product_price" id="buy-product-price-{{ $products->id }}" value="">
+                            
+                                        @if($products->flavors && $products->flavors->isNotEmpty())
+                                            <div class="flavors-section">
+                                                <label>Select a Flavor:</label>
+                                                <div class="flavors-buttons">
+                                                    @foreach($products->flavors as $index => $flavor)
+                                                        <label class="flavor-option">
+                                                            <input type="radio" name="selected_flavor" value="{{ $flavor->id }}" {{ $index === 0 ? 'checked' : '' }} 
+                                                            onclick="showSizesForFlavor({{ $flavor->id }})" required="">
+                                                            <span>{{ $flavor->name }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if($products->sizes && $products->sizes->isNotEmpty())
+                                            <div class="sizes-section">
+                                                <label>Select a Size:</label>
+                                                <div class="sizes-buttons">
+                                                    @foreach($products->flavors as $flavor)
+                                                        <div class="flavor-sizes" id="buy-sizes-for-flavor-{{ $flavor->id }}" style="display: none;">
+                                                            @foreach($flavor->sizes as $size)
+                                                                <label class="size-option">
+                                                                    <input type="radio" name="selected_size" value="{{ $size->id }}" data-price="{{ $size->price }}"
+                                                                    onclick="updateProductInfoForBuy('{{ $products->id }}', '{{ $products->title }}', '{{ $flavor->name }}', '{{ $size->size }}', {{ $size->price }})" required="">
+                                                                    <span>{{ $size->size }}</span>
+                                                                </label>
+                                                            @endforeach
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+
+                            <input type="submit" class="btn btn-warning btn-sm mt-2" value="BUY NOW">
+                                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="hideOverlay(this)">Cancel</button>
+                            </form>
+                        </div>
 
                 @if($products->quantity > 0)
                     <label class="stock">In Stock</label>
@@ -220,7 +273,11 @@
                     </button> 
                   </li>
 
-                    <li><a href="{{url('product_details',$products->id)}}" class="icon-button"><i class="fa fa-info"></i></a></li>
+                  <li>
+                    <button type="button" class="icon-button" onclick="showOverlay('buy', {{ $products->id }})">
+                        <i><b>BUY</b></i></a></li>
+                    </button>
+                </li>
                     <li>
                         <button type="button" class="icon-button" onclick="showOverlay('cart', {{ $products->id }})">
                             <i class="fa fa-shopping-cart"></i>
@@ -301,6 +358,10 @@
     if (wishselectedSizeSection) {
         wishselectedSizeSection.style.display = 'block';
     }
+    const buyselectedSizeSection = document.getElementById(`buy-sizes-for-flavor-${flavorId}`);
+    if (buyselectedSizeSection) {
+        buyselectedSizeSection.style.display = 'block';
+    }
 }
 
 // Initial load to show sizes for the first flavor
@@ -346,6 +407,22 @@ function updateProductInfoForWishlist(productId, productName, flavorName, sizeNa
     
     // Update product price with selected size price for Wishlist
     const productPriceField = document.getElementById(`wishlist-product-price-${productId}`);
+    productPriceField.value = sizePrice;
+
+    const productPriceFieldChange = document.getElementById(`product-price-change-${productId}`);
+    if (productPriceFieldChange) {
+        productPriceFieldChange.textContent = '₱' + sizePrice; // Update the price
+    } else {
+        console.error(`Product price element not found for productId: ${productId}`);
+    }
+}
+function updateProductInfoForBuy(productId, productName, flavorName, sizeName, sizePrice) {
+    // Combine product name with flavor and size for Wishlist
+    const productNameField = document.getElementById(`buy-product-name-${productId}`);
+    productNameField.value = `${productName} ${flavorName} ${sizeName}`;
+    
+    // Update product price with selected size price for Wishlist
+    const productPriceField = document.getElementById(`buy-product-price-${productId}`);
     productPriceField.value = sizePrice;
 
     const productPriceFieldChange = document.getElementById(`product-price-change-${productId}`);
@@ -415,6 +492,9 @@ function updateProductInfoForWishlist(productId, productName, flavorName, sizeNa
        @endif
    @endforeach
    
+   function redirectToProduct(url) {
+    window.location.href = url; // Redirects to the specified URL
+}
    </script>
 
 </body>
