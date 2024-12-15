@@ -67,10 +67,10 @@
 
     <div class="container">
         <div class="row login-container">
-            <div class="col-lg-6">
+           <!-- <div class="col-lg-3">
                 <img src="{{ asset('img/dairy.png') }}" alt="Dairy Image" class="w-100 h-100" style="object-fit: cover;">
-            </div>
-            <div class="col-lg-6">
+            </div>-->
+            <div class="col-lg-9">
                     @include('auth.register')
             </div>
         </div>
@@ -87,7 +87,6 @@
     <script src="home/js/mixitup.min.js"></script>
     <script src="home/js/owl.carousel.min.js"></script>
     <script src="home/js/main.js"></script>
-
     
 
 </body>

@@ -10,31 +10,52 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <div>
-                <x-label for="first_name" value="{{ __('First Name') }}" />
-                <x-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required autofocus autocomplete="given-name" />
+            <div class="row">
+                <div class="col-6">
+                    <x-label for="first_name" value="{{ __('First Name') }}" />
+                    <x-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required autofocus autocomplete="given-name" />
+                </div>
+                
+                <div class="col-6">
+                    <x-label for="last_name" value="{{ __('Last Name') }}" />
+                    <x-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autocomplete="family-name" />
+                </div>            
             </div>
-            
-            <div class="mt-4">
-                <x-label for="last_name" value="{{ __('Last Name') }}" />
-                <x-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autocomplete="family-name" />
-            </div>            
-
             <div class="mt-4">
                 <x-label for="email" value="{{ __('Email') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             </div>
 
             <div class="mt-4">
-                <x-label for="phone" value="{{ __('Phone') }}" />
-                <x-input id="phone" class="block mt-1 w-full" type="number" name="phone" :value="old('phone')" required autofocus autocomplete="username" />
+                <x-label for="phone" class="block text-sm font-medium text-gray-700"
+                    value="{{ __('Phone') }}" />
+                <div class="flex items-center border border-gray-300 rounded-md shadow-sm">
+                    <!-- Philippine Flag -->
+                    <span class="inline-flex items-center px-3 bg-gray-100 border-r border-gray-300 rounded-l-md">
+                        <img src="https://flagcdn.com/w40/ph.png" alt="Philippine Flag" class="w-6 h-4" />
+                    </span>
+                    <!-- +63 Prefix -->
+                    <span class="inline-flex items-center px-3 bg-gray-100 border-r border-gray-300">
+                        +63
+                    </span>
+                    <!-- Phone Number Input -->
+                    <input 
+                        type="text" 
+                        id="phone" 
+                        name="phone" 
+                        class="block w-full border-none rounded-r-md focus:ring-0" 
+                        placeholder="9XXXXXXXXX" 
+                        pattern="9[0-9]{9}" 
+                        required 
+                    />
+                </div>
             </div>
+            
 
             <div class="mt-4">
                 <x-label for="address" value="{{ __('Address') }}" />
-                <x-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required autofocus autocomplete="username" />
+                <x-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required autofocus/>
             </div>
-
 
             <div class="mt-4">
                 <x-label for="password" value="{{ __('Password') }}" />
@@ -75,3 +96,55 @@
         </form>
     </x-authentication-card>
 </x-guest-layout>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChM5RFa_lzvr4pTBiaAK04zUkJez78_R0&libraries=places&callback=initMap" async defer></script>
+<script>
+    function initializeAutocomplete() {
+        const addressInput = document.getElementById('address');
+
+        // Initialize Google Places Autocomplete
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            types: ['establishment', 'geocode'], // Includes establishments and zones
+            componentRestrictions: { country: "ph" } // Restrict to the Philippines
+        });
+
+        // Listen for when the user selects a suggestion
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+
+            // Validate if the place is valid
+            if (place.geometry) {
+                console.log("Selected Place:", place);
+                console.log("Full Address:", place.formatted_address);
+
+                // Optional: Extract components like zone, city, etc.
+                const components = place.address_components;
+                components.forEach(component => {
+                    const types = component.types;
+                    if (types.includes('sublocality') || types.includes('neighborhood')) {
+                        console.log("Zone/Area:", component.long_name);
+                    }
+                    if (types.includes('locality')) {
+                        console.log("City:", component.long_name);
+                    }
+                });
+            } else {
+                alert("Please select a valid address.");
+            }
+        });
+
+        // Prevent gibberish input
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            const place = autocomplete.getPlace();
+            if (!place || !place.geometry) {
+                event.preventDefault();
+                alert('Please select a valid address from the suggestions.');
+                addressInput.focus();
+            }
+        });
+    }
+
+    // Initialize Autocomplete on page load
+    window.addEventListener('load', initializeAutocomplete);
+</script>
+
