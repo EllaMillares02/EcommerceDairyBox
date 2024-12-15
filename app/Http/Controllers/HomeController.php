@@ -453,7 +453,6 @@ public function saveProfile(Request $request)
         ]);
     }
 
-    // If the cart item is not found, return a 404 response
     return response()->json([
         'success' => false,
         'message' => 'Cart item not found.',
