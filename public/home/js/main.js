@@ -237,6 +237,8 @@ proQty.append('<span class="inc qtybtn">+</span>');
 
 // Handle quantity change
 proQty.on('click', '.qtybtn', function () {
+    event.preventDefault();
+    
     var $button = $(this);
     var $input = $button.parent().find('input');
     var oldValue = parseInt($input.val(), 10);
