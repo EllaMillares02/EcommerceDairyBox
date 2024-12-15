@@ -12,6 +12,7 @@
     <title>Pa-Buy | Ecommerce</title>
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    
 
     <!-- Css Styles -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
@@ -159,21 +160,26 @@
                                 <!-- Order Summary Section -->
                                     <div class="checkout__order__products">Products <span>Total</span></div>
                                     <ul>
-                                        @foreach($selectedProducts as $product)
-                                            <li><img src="{{ $product['img'] ?? '' }}" alt="{{ $product['title'] }} Image" style="display: inline; width: 30px;">
-                                                {{ $product['title'] }} x{{ $product['quantity'] }}<span>₱{{ $product['price'] }}</span></li>
-                                        @endforeach
+                                  
+                                            @foreach($selectedProducts as $product)
+                                                <li><img src="{{ $product['img'] ?? '' }}" alt="{{ $product['title'] }} Image" style="display: inline; width: 30px;">
+                                                    {{ $product['title'] }} x{{ $product['quantity'] }}<span>₱{{ $product['price'] }}</span></li>
+                                            @endforeach
+                                       
                                     </ul>
 
                                     <!-- Display the subtotal and total based on selected products -->
-                                    @php
+                                    @php 
+                                        // Calculate subtotal for selected products
                                         $subtotal1 = array_reduce($selectedProducts, function($carry, $product) {
                                             return $carry + $product['price'];
                                         }, 0);
 
-                                        $subtotal = $subtotal1 - $discountAmount;
-
+                                        // If productPrice has a value, add it to the subtotal1
+                                        $productPrice = isset($productPrice) && !empty($productPrice) ? $productPrice : 0;
+                                        $subtotal = $subtotal1 + $productPrice - $discountAmount; // Apply discount after adding productPrice
                                     @endphp
+
 
                                     
                                 <div class="checkout__order__products"> 
@@ -194,9 +200,9 @@
                                 <form action="{{ url('/save_orders') }}" method="POST" id="placeOrderForm">
                                     @csrf
                                     <input type="hidden" name="total" id="totalAmount" value="{{ $subtotal }}">
-                                    @foreach ($selectedProducts as $product)
-                                        <input type="hidden" name="products[]" value="{{ json_encode($product) }}">
-                                    @endforeach
+                                        @foreach ($selectedProducts as $product)
+                                            <input type="hidden" name="products[]" value="{{ json_encode($product) }}">
+                                        @endforeach
                                     
                                     <input type="hidden" id="hidden_meetup_location" name="meetup_location">
                                     <input type="hidden" id="hidden_delivery_date" name="delivery_date">
