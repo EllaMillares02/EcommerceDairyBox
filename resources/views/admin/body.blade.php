@@ -12,7 +12,7 @@
                         <div class="stats-figure">{{ $total_prod }}</div>
                         
                     </div><!--//app-card-body-->
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{url('/show_product')}}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
             
@@ -22,7 +22,7 @@
                         <h4 class="stats-type mb-1">Products near expiry</h4>
                         <div class="stats-figure" style="color: red;">{{ $expiring_soon_count }}</div>
                     </div>
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{ route('nearExpiry_product') }}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
             <div class="col-6 col-lg-3">
@@ -33,7 +33,7 @@
                         <div class="stats-meta">
                             </div>
                     </div><!--//app-card-body-->
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
             <div class="col-6 col-lg-3">
@@ -43,7 +43,7 @@
                         <div class="stats-figure">₱{{ number_format($total_revenue, 2) }}</div>
                         <div class="stats-meta"></div>
                     </div><!--//app-card-body-->
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{url('/view_inventory')}}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
         </div><!--//row-->
@@ -54,7 +54,7 @@
                         <h4 class="stats-type mb-1">Orders</h4>
                         <div class="stats-figure">{{ $pending_orders_count }}</div>
                             <div class="stats-meta">Pending</div>
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{url('/view_order')}}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
             </div>
@@ -66,7 +66,7 @@
                         <div class="stats-figure">{{ $pickup_orders_count }}</div>
                         <div class="stats-meta">Pickup</div>
                     </div><!--//app-card-body-->
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{url('/view_order')}}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
             <div class="col-6 col-lg-3">
@@ -77,7 +77,7 @@
                         <div class="stats-meta">
                             Delivery</div>
                     </div><!--//app-card-body-->
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{url('/view_order')}}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
             <div class="col-6 col-lg-3">
@@ -87,7 +87,7 @@
                         <div class="stats-figure">{{ $completed_orders_count }}</div>
                         <div class="stats-meta">Completed</div>
                     </div><!--//app-card-body-->
-                    <a class="app-card-link-mask" href="#"></a>
+                    <a class="app-card-link-mask" href="{{url('/view_order')}}"></a>
                 </div><!--//app-card-->
             </div><!--//col-->
         </div><!--//row-->
