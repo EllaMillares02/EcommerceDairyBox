@@ -580,7 +580,7 @@
     </section>
     <!-- Related Product Section End -->
 
-    @include('home.footer');
+    @include('home.footer')
 
     <!-- Js Plugins -->
     <script src="home/js/jquery-3.3.1.min.js"></script>
