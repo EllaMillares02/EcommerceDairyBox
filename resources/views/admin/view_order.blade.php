@@ -121,7 +121,7 @@
 														@endfor
 													</td>
                                                 <td class="cell">₱{{$order->price}}</td>
-												<td class="cell"><span>{{ $order->created_at->format('m-d-Y') }}</span><span class="note">{{ $order->created_at->format('h:i:s A') }}</span></td>
+												<td class="cell"><span>{{ $order->created_at->format('m-d-Y') }}</span></td>
                                                 <td class="cell">
 													<span>{{ \Carbon\Carbon::parse($order->delivery_date)->format('m-d-Y') }}</span>
     												<span class="note">{{ \Carbon\Carbon::parse($order->delivery_date)->format('h:i:s A') }}</span>
@@ -196,7 +196,7 @@
 														@endfor
 													</td>
                                                 <td class="cell">₱{{$pickup->price}}</td>
-												<td class="cell"><span>{{ $pickup->created_at->format('m-d-Y') }}</span><span class="note">{{ $pickup->created_at->format('h:i:s A') }}</span></td>
+												<td class="cell"><span>{{ $pickup->created_at->format('m-d-Y') }}</span></td>
                                                 <td class="cell">
 													<span>{{ \Carbon\Carbon::parse($pickup->delivery_date)->format('m-d-Y') }}</span>
     												<span class="note">{{ \Carbon\Carbon::parse($pickup->delivery_date)->format('h:i:s A') }}</span>
@@ -262,7 +262,7 @@
 														@endfor
 													</td>
                                                 <td class="cell">₱{{$delivery->price}}</td>
-												<td class="cell"><span>{{ $delivery->created_at->format('m-d-Y') }}</span><span class="note">{{ $delivery->created_at->format('h:i:s A') }}</span></td>
+												<td class="cell"><span>{{ $delivery->created_at->format('m-d-Y') }}</span></td>
                                                 <td class="cell">
 													<span>{{ \Carbon\Carbon::parse($delivery->delivery_date)->format('m-d-Y') }}</span>
     												<span class="note">{{ \Carbon\Carbon::parse($delivery->delivery_date)->format('h:i:s A') }}</span>
@@ -332,7 +332,7 @@
 														@endfor
 													</td>
                                                 <td class="cell">₱{{$compOrders->price}}</td>
-												<td class="cell"><span>{{ $compOrders->created_at->format('m-d-Y') }}</span><span class="note">{{ $compOrders->created_at->format('h:i:s A') }}</span></td>
+												<td class="cell"><span>{{ $compOrders->created_at->format('m-d-Y') }}</span></td>
                                                 <td class="cell">
 													<span>{{ \Carbon\Carbon::parse($compOrders->delivery_date)->format('m-d-Y') }}</span>
     												<span class="note">{{ \Carbon\Carbon::parse($compOrders->delivery_date)->format('h:i:s A') }}</span>
@@ -398,7 +398,7 @@
 															@endfor
 														</td>
 													<td class="cell">₱{{$cancelledOrders->price}}</td>
-													<td class="cell"><span>{{ $cancelledOrders->created_at->format('m-d-Y') }}</span><span class="note">{{ $cancelledOrders->created_at->format('h:i:s A') }}</span></td>
+													<td class="cell"><span>{{ $cancelledOrders->created_at->format('m-d-Y') }}</span></td>
 													<td class="cell">
 														<span>{{ \Carbon\Carbon::parse($cancelledOrders->delivery_date)->format('m-d-Y') }}</span>
 														<span class="note">{{ \Carbon\Carbon::parse($cancelledOrders->delivery_date)->format('h:i:s A') }}</span>
