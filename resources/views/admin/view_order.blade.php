@@ -51,17 +51,7 @@
 				    <div class="col-auto">
 					     <div class="page-utilities">
 						    <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-							    <div class="col-auto">
-								    <form class="table-search-form row gx-1 align-items-center">
-					                    <div class="col-auto">
-					                        <input type="text" id="search-orders" name="searchorders" class="form-control search-orders" placeholder="Search">
-					                    </div>
-					                    <div class="col-auto">
-					                        <button type="submit" class="btn app-btn-secondary">Search</button>
-					                    </div>
-					                </form>
-					                
-							    </div><!--//col-->
+							    
 						    </div><!--//row-->
 					    </div><!--//table-utilities-->
 				    </div><!--//col-auto-->
@@ -116,7 +106,7 @@
 
 											<tr>
 												<td class="cell">{{$order->name}}</td>
-												<td class="cell"><span class="truncate">{{$order->email}}</span></td>
+												<td class="cell">{{$order->email}}</td>
 												<td class="cell">{{$order->phone}}</td>
                                                 <td class="cell">{{$order->address}}</td>
                                                 @php
@@ -145,10 +135,10 @@
 												</td>
 
                                                 <td class="cell">		
-													<a class="btn-sm bg-success text-white shadow-sm rounded" href="{{url('accepted',$order->id)}}" 
-														onclick="acceptConfirmation(event)">Accept</a><br><br>
-													<a id="cancelButton" class="btn-sm bg-danger text-white shadow-sm rounded" href="#" data-bs-toggle="modal" data-bs-target="#cancelModal"
-                                                    data-order-id="{{ $order->id }}" onclick="openCancelModal(this)">Cancel</a>
+													<a class="btn bg-success text-white shadow-sm rounded" href="{{url('accepted',$order->id)}}" 
+														onclick="acceptConfirmation(event)">Accept Order</a><br><br>
+													<a id="cancelButton" class="btn bg-danger text-white shadow-sm rounded" href="#" data-bs-toggle="modal" data-bs-target="#cancelModal"
+                                                    data-order-id="{{ $order->id }}" onclick="openCancelModal(this)">Cancel Order</a>
 												</td>
                                                 
 											</tr>
@@ -161,19 +151,6 @@
 						       
 						    </div><!--//app-card-body-->		
 						</div><!--//app-card-->
-						<nav class="app-pagination">
-							<ul class="pagination justify-content-center">
-								<li class="page-item disabled">
-									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-							    </li>
-								<li class="page-item active"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item">
-								    <a class="page-link" href="#">Next</a>
-								</li>
-							</ul>
-						</nav><!--//app-pagination-->
 						
 			        </div><!--//tab-pane-->
 					
@@ -194,7 +171,6 @@
 												<th class="cell">Order Date</th>
 												<th class="cell">Delivery</th>
 												<th class="cell">Meetup</th>
-                                                <th class="cell">Status</th>
 
 												<th class="cell"></th>
 											</tr>
@@ -226,11 +202,10 @@
     												<span class="note">{{ \Carbon\Carbon::parse($pickup->delivery_date)->format('h:i:s A') }}</span>
 												</td>
 												<td class="cell">{{ $pickup->pickup_location }}</td>
-                                                <td class="cell"><span class="badge bg-secondary">{{$pickup->delivery_status}}</span></td>
 
                                                 <td class="cell">		
-													<a class="btn-sm bg-success text-white shadow-sm rounded" href="{{url('toDeliver',$pickup->id)}}" 
-														onclick="pickupConfirmation(event)">Pickup?</a>
+													<a class="btn bg-success text-white shadow-sm rounded" href="{{url('toDeliver',$pickup->id)}}" 
+														onclick="pickupConfirmation(event)">Pickup Order</a>
 												</td>
                                                 
 											</tr>
