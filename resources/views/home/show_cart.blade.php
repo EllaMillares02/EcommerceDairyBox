@@ -186,11 +186,9 @@
                                     <td class="shoping__cart__quantity">
                                         <div class="quantity">
                                             <div class="pro-qty">
-                                                <button type="button" class="dec qtybtn">-</button>
-                                                <input type="number" value="{{$cart->quantity}}" min="1" data-product-id="acc-{{$cart->id}}">
-                                                <button type="button" class="inc qtybtn">+</button>
+                                                <input type="text" value="{{$cart->quantity}}" min="1" data-product-id="acc-{{$cart->id}}">
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </td>
                                     <td class="shoping__cart__total product-total-{{ $cart->id }}">
                                         ₱<span>{{ $cart->price }}</span>
