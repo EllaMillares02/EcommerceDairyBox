@@ -225,7 +225,7 @@
                                 </div>
                             </div>
 
-                            <input type="submit" class="primary-btn"  value="ADD TO CART">
+                            <input type="submit" class="primary-btn"  value="ADD TO CART" title="Please Select a Flavor or Size First.">
                             
                         </form>
                         
@@ -238,7 +238,7 @@
                             <input type="hidden" name="quantity" value="1" min="1">
 
                             <label class="heart-icon ml-1">
-                                <input type="submit" value="ADD TO WISHLIST" style="display: none;">
+                                <input type="submit" value="ADD TO WISHLIST" style="display: none;" title="Please Select a Flavor or Size First.">
                                 <span class="icon_heart_alt"></span>
                             </label>                            
                            
@@ -251,7 +251,7 @@
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <input type="hidden" name="productName" id="buy-product-name-{{ $product->id }}" value="">
                             <input type="hidden" name="product_price" id="buy-product-price-{{ $product->id }}" value="">
-                            <input type="submit" class="primary-btn ml-3"  value="BUY NOW">
+                            <input type="submit" class="primary-btn ml-3"  value="BUY NOW" title="Please Select a Flavor or Size First." >
                         </form>
                         
                     </div>
@@ -829,6 +829,23 @@ function updateDisplayedPrice(selectedPrice, productId) {
         lineThroughPrice.textContent = `${selectedPrice.toFixed(2)}`;
     }
 }
+document.addEventListener('DOMContentLoaded', function () {
+    // Get all forms (for both wishlist and checkout)
+    document.querySelectorAll('form').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            // Get the necessary input values
+            let productName = form.querySelector('[name="product_name"]').value;
+            let productPrice = form.querySelector('[name="product_price"]').value;
+
+            // Check if the required fields are filled
+            if (!productName || !productPrice) {
+                event.preventDefault(); // Prevent form submission
+                alert('Product name and price must be filled!');
+            }
+        });
+    });
+});
+
 
 </script>
 
