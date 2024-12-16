@@ -424,41 +424,48 @@ public function saveProfile(Request $request)
         return redirect()->back();
     }
 
-   public function update_cart(Request $request)
-{
-    // Find the cart item
-    $cartItem = Cart::find($request->id);
-
-    if ($cartItem) {
-        // Update the quantity
-        $cartItem->quantity = $request->quantity;
-
-        // Update the price based on product price and quantity
-        if ($cartItem->product_price) {
-            $cartItem->price = $cartItem->product_price * $request->quantity;
-        }
-
-        // Save the updated cart item
-        $cartItem->save();
-
-        // Calculate the updated cart total for the user
-        $cartTotal = Cart::where('user_id', Auth::user()->id)
-            ->sum(DB::raw('quantity * product_price'));
-
-        // Return a response with the updated product subtotal and cart total
-        return response()->json([
-            'success' => true,
-            'productSubtotal' => number_format($cartItem->price), // Updated price for the product
-            'cartTotal' => number_format($cartTotal), // Updated total for the cart
+    public function update_cart(Request $request)
+    {
+        // Validate the request to ensure quantity is a positive integer and at least 1
+        $validated = $request->validate([
+            'id' => 'required|exists:carts,id', // Ensure the cart item exists
+            'quantity' => 'required|integer|min:1', // Quantity must be at least 1
         ]);
+    
+        // Find the cart item
+        $cartItem = Cart::find($validated['id']);
+    
+        if ($cartItem) {
+            // Update the quantity (ensuring it's at least 1)
+            $cartItem->quantity = max($validated['quantity'], 1);
+    
+            // Update the price based on product price and quantity
+            if ($cartItem->product_price) {
+                $cartItem->price = $cartItem->product_price * $cartItem->quantity;
+            }
+    
+            // Save the updated cart item
+            $cartItem->save();
+    
+            // Calculate the updated cart total for the user
+            $cartTotal = Cart::where('user_id', Auth::user()->id)
+                ->sum(DB::raw('quantity * product_price'));
+    
+            // Return a response with the updated product subtotal and cart total
+            return response()->json([
+                'success' => true,
+                'productSubtotal' => number_format($cartItem->price, 2), // Updated price for the product
+                'cartTotal' => number_format($cartTotal, 2), // Updated total for the cart
+            ]);
+        }
+    
+        // If the cart item doesn't exist, return an error response
+        return response()->json([
+            'success' => false,
+            'message' => 'Cart item not found.',
+        ], 404);
     }
-
-    return response()->json([
-        'success' => false,
-        'message' => 'Cart item not found.',
-    ], 404);
-}
-
+    
 
 public function add_wishlist(Request $request, $id){
     if (Auth::id()) {
