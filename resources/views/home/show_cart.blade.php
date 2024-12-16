@@ -186,7 +186,7 @@
                                     <td class="shoping__cart__quantity">
                                         <div class="quantity">
                                             <div class="pro-qty">
-                                                <input type="text" value="{{$cart->quantity}}" min="1" data-product-id="acc-{{$cart->id}}" readonly>
+                                                <input type="text" value="{{$cart->quantity}}" min="1" data-product-id="acc-{{$cart->id}}">
                                             </div>
                                         </div>
                                     </td>
