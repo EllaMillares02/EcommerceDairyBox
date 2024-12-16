@@ -330,6 +330,19 @@ function confirmRemove(url) {
             }
         });
     }
+    document.addEventListener('DOMContentLoaded', function () {
+    const quantityInputs = document.querySelectorAll('.pro-qty input[type="number"]');
+
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', function () {
+            if (parseInt(this.value) < 1 || isNaN(this.value)) {
+                this.value = 1; // Reset to minimum value if invalid
+                alert("Quantity cannot be less than 1.");
+            }
+        });
+    });
+});
+
     
     </script>
 
