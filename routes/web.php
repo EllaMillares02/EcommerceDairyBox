@@ -78,7 +78,7 @@ route::get('/show_wishlist',[HomeController::class,'show_wishlist']);
 route::get('/remove_wishlist/{id}',[HomeController::class,'remove_wishlist'])->name('remove_wishlist');
 
 route::post('/checkout',[HomeController::class,'checkout']);
-route::get('/orders',[HomeController::class,'orders']);
+route::get('/orders',[HomeController::class,'orders'])->name('orders');;
 route::post('/save_orders',[HomeController::class,'save_orders']);
 route::get('/show_shop',[HomeController::class,'show_shop'])->name('show_shop');
 
