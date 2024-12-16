@@ -172,7 +172,7 @@
                                                         @endfor
                                                     </td>
                                                 <td class="cell">₱{{$order->price}}</td>
-                                                <td class="cell"><span>{{ $order->created_at->format('m-d-Y') }}</span><span class="note">{{ $order->created_at->format('h:i:s A') }}</span></td>
+                                                <td class="cell"><span>{{ $order->created_at->format('m-d-Y') }}</span></td>
                                                 <td class="cell">
                                                     <span>{{ \Carbon\Carbon::parse($order->delivery_date)->format('m-d-Y') }}</span>
                                                     <span class="note">{{ \Carbon\Carbon::parse($order->delivery_date)->format('h:i:s A') }}</span>
