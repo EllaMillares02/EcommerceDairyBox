@@ -236,7 +236,7 @@ proQty.prepend('<span class="dec qtybtn">-</span>');
 proQty.append('<span class="inc qtybtn">+</span>');
 
 // Handle quantity change
-proQty.on('click', '.qtybtn', function () {
+proQty.on('click', '.qtybtn', function (event) {
     event.preventDefault();
     
     var $button = $(this);
@@ -249,11 +249,17 @@ proQty.on('click', '.qtybtn', function () {
     if ($button.hasClass('inc')) {
         newVal = oldValue + 1;
     } else {
-        newVal = oldValue > 1 ? oldValue - 1 : 1; // Prevent going below 1
+        newVal = Math.max(oldValue - 1, 1); // Prevent going below 1
     }
 
-    // Update input value
+    // Update input value (enforce min=1)
     $input.val(newVal);
+
+    // Validate input to ensure it doesn't go below 1
+    if (newVal < 1 || isNaN(newVal)) {
+        $input.val(1); // Reset to 1 if invalid
+        newVal = 1;
+    }
 
     // Send AJAX request to update cart
     $.ajax({
@@ -281,6 +287,43 @@ proQty.on('click', '.qtybtn', function () {
         }
     });
 });
+
+// Handle direct manual input (on blur)
+proQty.on('blur', 'input', function () {
+    var $input = $(this);
+    var currentValue = parseInt($input.val(), 10);
+    var productId = $input.data('product-id').replace('acc-', '');
+
+    if (currentValue < 1 || isNaN(currentValue)) {
+        $input.val(1); // Reset to 1 if invalid
+        currentValue = 1;
+    }
+
+    // Send AJAX request to update cart
+    $.ajax({
+        url: '/update_cart',
+        method: 'POST',
+        data: {
+            id: productId,
+            quantity: currentValue,
+            _token: $('meta[name="csrf-token"]').attr('content') 
+        },
+        success: function (response) {
+            if (response.success) {
+                // Update product price and cart total dynamically
+                $('.product-total-' + productId + ' span').text(response.productSubtotal);
+                $('.cart-total').text(response.cartTotal);
+            } else {
+                alert('Failed to update cart. Please try again.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error updating cart:', error);
+            alert('An error occurred while updating the cart. Please try again.');
+        }
+    });
+});
+
 
 /*-------------------
     Checkout price
