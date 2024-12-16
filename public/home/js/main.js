@@ -231,31 +231,27 @@
 --------------------- */
 var proQty = $('.pro-qty');
 
-// Add increment and decrement buttons
-proQty.prepend('<span class="dec qtybtn">-</span>');
-proQty.append('<span class="inc qtybtn">+</span>');
-
 // Handle quantity change
 proQty.on('click', '.qtybtn', function (event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent any default behavior (e.g., form submission)
 
     var $button = $(this);
-    var $input = $button.parent().find('input');
+    var $input = $button.siblings('input'); // Find the sibling input field
     var oldValue = parseInt($input.val(), 10);
     var productId = $input.data('product-id').replace('acc-', '');
     var newVal;
 
     // Increment or decrement quantity
     if ($button.hasClass('inc')) {
-        newVal = oldValue + 1;
+        newVal = oldValue + 1; // Increment
     } else {
-        newVal = Math.max(oldValue - 1, 1); // Ensure the minimum value is 1
+        newVal = Math.max(oldValue - 1, 1); // Decrement but do not go below 1
     }
 
     // Update the input value
     $input.val(newVal);
 
-    // Send AJAX request to update the cart
+    // Send AJAX request to update cart
     $.ajax({
         url: '/update_cart',
         method: 'POST',
@@ -266,7 +262,7 @@ proQty.on('click', '.qtybtn', function (event) {
         },
         success: function (response) {
             if (response.success) {
-                // Update the product price dynamically
+                // Update the product subtotal dynamically
                 $('.product-total-' + productId + ' span').text(response.productSubtotal);
 
                 // Update the cart total dynamically
