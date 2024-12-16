@@ -210,7 +210,7 @@ class AdminController extends Controller
 
         $product->delete();
 
-        return redirect()->back()->with('message','Product deleted successfully!');
+        return redirect('show_product')->with('message','Product deleted successfully!');
     }
 
     public function update_product($id){
