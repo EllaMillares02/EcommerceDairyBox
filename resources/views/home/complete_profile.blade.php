@@ -116,7 +116,7 @@
                                 <!-- Address Field -->
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Address</label>
-                                    <input type="text" id="address" name="address" class="form-control" required placeholder="Enter your address">
+                                    <input type="text" id="address" name="address" :value="old('address')" required autofocus class="form-control" required placeholder="Enter your address">
                                 </div>
     
                                 <!-- Phone Field -->
@@ -162,7 +162,57 @@
     <script src="home/js/owl.carousel.min.js"></script>
     <script src="home/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChM5RFa_lzvr4pTBiaAK04zUkJez78_R0&libraries=places&callback=initMap" async defer></script>
+<script>
+    function initializeAutocomplete() {
+        const addressInput = document.getElementById('address');
 
+        // Initialize Google Places Autocomplete
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            types: ['establishment', 'geocode'], // Includes establishments and zones
+            componentRestrictions: { country: "ph" } // Restrict to the Philippines
+        });
+
+        // Listen for when the user selects a suggestion
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+
+            // Validate if the place is valid
+            if (place.geometry) {
+                console.log("Selected Place:", place);
+                console.log("Full Address:", place.formatted_address);
+
+                // Optional: Extract components like zone, city, etc.
+                const components = place.address_components;
+                components.forEach(component => {
+                    const types = component.types;
+                    if (types.includes('sublocality') || types.includes('neighborhood')) {
+                        console.log("Zone/Area:", component.long_name);
+                    }
+                    if (types.includes('locality')) {
+                        console.log("City:", component.long_name);
+                    }
+                });
+            } else {
+                alert("Please select a valid address.");
+            }
+        });
+
+        // Prevent gibberish input
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            const place = autocomplete.getPlace();
+            if (!place || !place.geometry) {
+                event.preventDefault();
+                alert('Please select a valid address from the suggestions.');
+                addressInput.focus();
+            }
+        });
+    }
+
+    // Initialize Autocomplete on page load
+    window.addEventListener('load', initializeAutocomplete);
+</script>
     
 
 </body>
