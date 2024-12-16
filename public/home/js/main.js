@@ -236,9 +236,9 @@ proQty.prepend('<span class="dec qtybtn">-</span>');
 proQty.append('<span class="inc qtybtn">+</span>');
 
 // Handle quantity change
-proQty.on('click', '.qtybtn', function () {
+proQty.on('click', '.qtybtn', function (event) {
     event.preventDefault();
-    
+
     var $button = $(this);
     var $input = $button.parent().find('input');
     var oldValue = parseInt($input.val(), 10);
@@ -252,6 +252,11 @@ proQty.on('click', '.qtybtn', function () {
         newVal = oldValue > 1 ? oldValue - 1 : 1; // Prevent going below 1
     }
 
+    // Validate the value to ensure it is at least 1
+    if (newVal < 1 || isNaN(newVal)) {
+        newVal = 1;
+    }
+
     // Update input value
     $input.val(newVal);
 
@@ -262,7 +267,7 @@ proQty.on('click', '.qtybtn', function () {
         data: {
             id: productId,
             quantity: newVal,
-            _token: $('meta[name="csrf-token"]').attr('content') 
+            _token: $('meta[name="csrf-token"]').attr('content'),
         },
         success: function (response) {
             if (response.success) {
@@ -278,7 +283,39 @@ proQty.on('click', '.qtybtn', function () {
         error: function (xhr, status, error) {
             console.error('Error updating cart:', error);
             alert('An error occurred while updating the cart. Please try again.');
-        }
+        },
+    });
+});
+
+// Prevent manual input of 0 or invalid values
+proQty.on('change', 'input', function () {
+    var $input = $(this);
+    var newVal = parseInt($input.val(), 10);
+
+    // Ensure value is at least 1
+    if (newVal < 1 || isNaN(newVal)) {
+        newVal = 1;
+    }
+
+    // Update input value
+    $input.val(newVal);
+
+    // Optional: Trigger the AJAX update for manual input changes
+    var productId = $input.data('product-id').replace('acc-', '');
+    $.ajax({
+        url: '/update_cart',
+        method: 'POST',
+        data: {
+            id: productId,
+            quantity: newVal,
+            _token: $('meta[name="csrf-token"]').attr('content'),
+        },
+        success: function (response) {
+            if (response.success) {
+                $('.product-total-' + productId + ' span').text(response.productSubtotal);
+                $('.cart-total').text(response.cartTotal);
+            }
+        },
     });
 });
 
