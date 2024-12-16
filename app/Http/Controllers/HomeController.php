@@ -892,8 +892,9 @@ public function view_quiz(){
 public function rate_now($id){
 
     $order=order::find($id);
+    $categories = Category::all();
 
-    return view('home.rate_now', compact('order'));
+    return view('home.rate_now', compact('order', 'categories'));
 }
 
 public function submitReviews(Request $request)
@@ -916,8 +917,13 @@ public function submitReviews(Request $request)
         ]);
     }
 
-    // Redirect to home.orders with a success message
-    return redirect()->back()->with('message', 'Thank you for your rating!');
+    session()->flash('swal', [
+        'title' => 'Thank you!',
+        'text' => 'Thank you for your rating!',
+        'icon' => 'success'
+    ]);
+
+    return redirect()->route('orders');
 }
 
 public function contact(){
