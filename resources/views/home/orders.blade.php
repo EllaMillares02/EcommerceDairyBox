@@ -165,7 +165,7 @@
                                         <td class="cell">{!! $productsList !!}</td>
                                         <td class="cell">₱{{ $orders->price }}</td>
                                         <td class="cell"><span class="badge bg-success">{{ $orders->delivery_status }}</span></td>
-                                        <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span><span class="note">{{ $orders->created_at->format('h:i:s A') }}</span></td>
+                                        <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span></span></td>
                                         <td class="cell">
                                             <span>{{ \Carbon\Carbon::parse($orders->delivery_date)->format('m-d-Y') }}</span>
                                             <span class="note">{{ \Carbon\Carbon::parse($orders->delivery_date)->format('h:i:s A') }}</span>
@@ -254,7 +254,7 @@
                                             <td class="cell">{!! $productsList !!}</td>
                                             <td class="cell">₱{{ $orders->price }}</td>
                                             <td class="cell"><span class="badge bg-success">{{ $orders->delivery_status }}</span></td>
-                                            <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span><span class="note">{{ $orders->created_at->format('h:i:s A') }}</span></td>
+                                            <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span></td>
                                             <td class="cell">
                                                 <span>{{ \Carbon\Carbon::parse($orders->delivery_date)->format('m-d-Y') }}</span>
                                                 <span class="note">{{ \Carbon\Carbon::parse($orders->delivery_date)->format('h:i:s A') }}</span>
@@ -346,7 +346,7 @@
                                             <td class="cell">{!! $productsList !!}</td>
                                             <td class="cell">₱{{ $orders->price }}</td>
                                             <td class="cell"><span class="badge bg-success">{{ $orders->delivery_status }}</span></td>
-                                            <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span><span class="note">{{ $orders->created_at->format('h:i:s A') }}</span></td>
+                                            <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span></td>
                                             <td class="cell">
                                                 <span>{{ \Carbon\Carbon::parse($orders->delivery_date)->format('m-d-Y') }}</span>
                                                 <span class="note">{{ \Carbon\Carbon::parse($orders->delivery_date)->format('h:i:s A') }}</span>
@@ -437,7 +437,7 @@
                                             <td class="cell">{!! $productsList !!}</td>
                                             <td class="cell">₱{{ $orders->price }}</td>
                                             <td class="cell"><span class="badge bg-danger">{{ $orders->delivery_status }}</span></td>
-                                            <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</span><span class="note">{{ $orders->created_at->format('h:i:s A') }}</span></td>
+                                            <td class="cell"><span>{{ $orders->created_at->format('m-d-Y') }}</td>
                                             <td class="cell">
                                                 <span>{{ \Carbon\Carbon::parse($orders->delivery_date)->format('m-d-Y') }}</span>
                                                 <span class="note">{{ \Carbon\Carbon::parse($orders->delivery_date)->format('h:i:s A') }}</span>
