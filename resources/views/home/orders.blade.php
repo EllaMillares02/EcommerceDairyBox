@@ -93,17 +93,16 @@
 
     @include('sweetalert::alert')
     <!-- Breadcrumb Section End -->
-    @if(session()->has('message'))
-
-    <div class="alert alert-success">
-
-        {{session()->get('message')}}
-
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        
-    </div>
-    
+    @if (session('swal'))
+    <script>
+        Swal.fire({
+            title: "{{ session('swal.title') }}",
+            text: "{{ session('swal.text') }}",
+            icon: "{{ session('swal.icon') }}"
+        });
+    </script>
 @endif
+
 
     <div class="app-content pt-3 p-md-3 p-lg-4">
         <div class="container-xl">
