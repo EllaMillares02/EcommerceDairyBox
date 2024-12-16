@@ -48,8 +48,13 @@ class DeliveryManController extends Controller
     $order->delivery_status = 'completed';
     $order->save(); 
 
+    session()->flash('swal', [
+        'title' => 'Success!',
+        'text' => 'Proof of delivery uploaded successfully!',
+        'icon' => 'success',
+    ]);
     
-    return redirect()->back()->with('message','Proof of delivery uploaded successfully!');;
+    return redirect('/')->with('message','Proof of delivery uploaded successfully!');;
 
 }
 public function cancelOrder(Request $request, $id){
