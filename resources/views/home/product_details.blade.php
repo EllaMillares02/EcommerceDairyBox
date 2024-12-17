@@ -237,7 +237,7 @@
 
                             <input type="hidden" name="quantity" value="1" min="1">
 
-                            <label class="heart-icon ml-1">
+                            <label class="heart-icon ml-1 mr-3">
                                 <input type="submit" value="ADD TO WISHLIST" style="display: none;" title="Please Select a Flavor or Size First.">
                                 <span class="icon_heart_alt"></span>
                             </label>                            
@@ -251,7 +251,9 @@
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <input type="hidden" name="productName" id="buy-product-name-{{ $product->id }}" value="">
                             <input type="hidden" name="product_price" id="buy-product-price-{{ $product->id }}" value="">
-                            <input type="submit" class="primary-btn ml-3"  value="BUY NOW" title="Please Select a Flavor or Size First." >
+                            <div class="button-container">
+                                <input type="submit" class="buy-to-cart-btn primary-btn" value="BUY NOW" title="Please Select a Flavor or Size First.">
+                            </div>                            
                         </form>
                         
                     </div>

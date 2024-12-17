@@ -4128,3 +4128,17 @@ ol {
     border-color: #bf9911; 
 }
 
+/* Container Styling */
+.button-container {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 768px) {
+    .buy-to-cart-btn {
+		margin-left: -270%;
+        width: 100%; /* Makes the button responsive to take full width */
+        margin-top: 160px; /* Adds spacing from the above elements */
+    }
+}
