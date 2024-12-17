@@ -234,20 +234,29 @@
                                     </thead>
                                     <tbody>
                                     
-                                        @forelse ($orderItems as $orders)
                                         @php
-                                            // Split the strings into arrays
-                                            $productTitles = explode(', ', $orders->product_title);       // Array of product titles
-                                            $quantities = explode(', ', $orders->quantity);       // Array of quantities
-                                            $images = explode(', ', $orders->image);               // Array of product images
-                            
-                                            // Concatenate titles and quantities for display
-                                            $productsDisplay = [];
-                                            for ($i = 0; $i < count($productTitles); $i++) {
-                                                $productsDisplay[] = '<img class="img_design" src="' . $images[$i] . '" alt="" style="width: 30px; margin-right: 5px;"> ' . $productTitles[$i] . ' x ' . $quantities[$i];
-                                            }
-                                            $productsList = implode(', ', $productsDisplay);
-                                        @endphp
+    // Split the strings into arrays
+    $productTitles = explode(', ', $orders->product_title);
+    $quantities = explode(', ', $orders->quantity);
+    $images = explode(', ', $orders->image);
+
+    // Ensure arrays are aligned
+    $minCount = min(count($productTitles), count($quantities), count($images));
+
+    // Concatenate titles and quantities for display
+    $productsDisplay = [];
+    for ($i = 0; $i < $minCount; $i++) {
+        $imageSrc = $images[$i] ?? '';  // Use empty string if undefined
+        $title = $productTitles[$i] ?? 'N/A';
+        $quantity = $quantities[$i] ?? '0';
+        
+        $productsDisplay[] = '<img class="img_design" src="' . $imageSrc . '" alt="" style="width: 30px; margin-right: 5px;"> ' 
+                             . $title . ' x ' . $quantity;
+    }
+
+    $productsList = implode(', ', $productsDisplay);
+@endphp
+
                             
                                         <tr>
                                             <td class="cell">{!! $productsList !!}</td>
