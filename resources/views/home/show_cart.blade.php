@@ -135,7 +135,15 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="shoping__product">Products</th>
+                                    <th class="shoping__product">
+                                        <div class="checkout__input__checkbox">
+                                            <label for="select-all">
+                                                <input type="checkbox" id="select-all" class="select-all-checkbox">
+                                                <span class="checkmark"></span>
+                                                <small class="mr-2" style="color: #EDBB0E">(Select All)</small>
+                                            </label>Products
+                                        </div>
+                                    </th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
@@ -331,6 +339,98 @@ function confirmRemove(url) {
         });
     }
     
+    document.addEventListener('DOMContentLoaded', function () {
+    const selectAllCheckbox = document.getElementById('select-all');
+    const productCheckboxes = document.querySelectorAll('.product-checkbox');
+    const checkoutButton = document.querySelector('.primary-btn');
+    const subtotalElement = document.querySelector('.subtotal');
+    const totalElement = document.querySelector('.total');
+    const discountElement = document.querySelector('#discountValue');
+    const discountInput = document.getElementById('discount');
+
+    // Function to toggle all product checkboxes
+    selectAllCheckbox.addEventListener('change', function () {
+        productCheckboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        updateTotals();
+        toggleCheckoutButton();
+    });
+
+    // Update "Select All" checkbox state and totals when individual checkboxes change
+    productCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function () {
+            const allChecked = Array.from(productCheckboxes).every((cb) => cb.checked);
+            const anyChecked = Array.from(productCheckboxes).some((cb) => cb.checked);
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = !allChecked && anyChecked;
+            updateTotals();
+            toggleCheckoutButton();
+        });
+    });
+
+    // Enable or disable the checkout button
+    function toggleCheckoutButton() {
+        const anyChecked = Array.from(productCheckboxes).some((cb) => cb.checked);
+        checkoutButton.disabled = !anyChecked;
+
+        // Update hidden input with selected products
+        const selectedProducts = Array.from(productCheckboxes)
+            .filter((cb) => cb.checked)
+            .map((cb) => ({
+                cart_id: cb.dataset.cartId,
+                product_id: cb.dataset.productId,
+                title: cb.dataset.productTitle,
+                price: cb.dataset.productPrice,
+                quantity: cb.dataset.productQuantity,
+                image: cb.dataset.productImg,
+            }));
+
+        document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
+    }
+
+    // Function to calculate and update totals
+    function updateTotals() {
+        let subtotal = 0;
+        let discount = parseFloat(discountInput.value || 0);
+
+        productCheckboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+                const price = parseFloat(checkbox.dataset.productPrice);
+                const quantity = parseInt(checkbox.dataset.productQuantity, 10);
+                subtotal += price * quantity;
+            }
+        });
+
+        const total = subtotal - discount;
+
+        // Update DOM elements
+        subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+        totalElement.textContent = `₱${total.toFixed(2)}`;
+    }
+
+    // Apply coupon discount (optional)
+    const applyCouponForm = document.getElementById('applyCouponForm');
+    if (applyCouponForm) {
+        applyCouponForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const couponCode = document.getElementById('couponCode').value.trim();
+
+            // Example logic for applying coupon (replace with your logic)
+            if (couponCode === 'DISCOUNT10') {
+                const discount = subtotal * 0.10; // 10% discount
+                discountElement.textContent = `-${discount.toFixed(2)}`;
+                discountInput.value = discount.toFixed(2);
+            } else {
+                discountElement.textContent = '-0';
+                discountInput.value = '0';
+            }
+            updateTotals();
+        });
+    }
+});
+
+
     </script>
 
     
