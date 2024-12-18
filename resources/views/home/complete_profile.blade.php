@@ -122,7 +122,27 @@
                                 <!-- Phone Field -->
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Phone Number</label>
-                                    <input type="text" id="phone" name="phone" class="form-control" required placeholder="Enter your phone number">
+                                    <div class="flex items-center border border-gray-300 rounded-md shadow-sm">
+                                        <!-- Philippine Flag -->
+                                        <span class="inline-flex items-center px-3 bg-gray-100 border-r border-gray-300 rounded-l-md">
+                                            <img src="https://flagcdn.com/w40/ph.png" alt="Philippine Flag" class="w-6 h-4" />
+                                        </span>
+                                        <!-- +63 Prefix -->
+                                        <span class="inline-flex items-center px-3 bg-gray-100 border-r border-gray-300">
+                                            +63
+                                        </span>
+                                        <!-- Phone Number Input -->
+                                        <input 
+                                            type="text" 
+                                            id="phone" 
+                                            name="phone" 
+                                            class="block w-full border-none rounded-r-md focus:ring-0" 
+                                            class="form-control"
+                                            placeholder="9XXXXXXXXX" 
+                                            pattern="9[0-9]{9}" 
+                                            required 
+                                        />
+                                    </div>
                                 </div>
     
                                 <!-- Password Field -->
