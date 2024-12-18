@@ -389,7 +389,7 @@ public function saveProfile(Request $request)
                 ->where('product_id', $product->id)
                 ->delete();
 
-            return redirect('show_cart');
+            return redirect()->back();
         } else {
             return redirect('login_page');
         }

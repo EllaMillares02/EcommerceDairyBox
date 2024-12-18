@@ -140,7 +140,7 @@
                             
                             <!-- Input for address -->
                             <div class="checkout__input">
-                                <input type="text" id="location" name="meetup_location" placeholder="Enter your pickup location" oninput="fetchSuggestions()" required>
+                                <input type="text" id="location" name="meetup_location" placeholder="Enter your meet-up location" oninput="fetchSuggestions()" required>
                             </div>
                         
                             <!-- Suggestions list (hidden initially) -->
@@ -222,7 +222,12 @@
 
                                     <input type="hidden" id="hidden_delivery_type" name="hidden_delivery_type">
                                     
-                                    <button type="button" class="site-btn" id="confirmOrderButton" data-bs-toggle="modal" data-bs-target="#orderReviewModal">CONFIRM ORDER</button>
+                                    <div id="validation-message" style="color: red; margin-bottom: 10px; display: none;"></div>
+
+                                    <button type="button" class="site-btn" id="confirmOrderButton" data-bs-toggle="modal" data-bs-target="#orderReviewModal" disabled>
+                                        CONFIRM ORDER
+                                    </button>
+
                                     
                                     <div class="modal fade" id="orderReviewModal" tabindex="-1" aria-labelledby="orderReviewModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -238,6 +243,7 @@
                                                     <ul class="list-group mb-3" id="orderDetailsList">
 
                                                     </ul>
+                                                    <p><strong>Total:</strong> <span id="modalTotal"></span></p>
                                 
                                                     <p><strong>Meetup Location:</strong> <span id="modalMeetupLocation"></span></p>
                                                     <p><strong>Delivery Date:</strong> <span id="modalDeliveryDate"></span></p>
@@ -281,57 +287,61 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const confirmOrderButton = document.getElementById('confirmOrderButton');
-            const modalMeetupLocation = document.getElementById('modalMeetupLocation');
-            const modalDeliveryDate = document.getElementById('modalDeliveryDate');
-            const modalPickupLocation = document.getElementById('modalPickupLocation');
-            const modalPickupDate = document.getElementById('modalPickupDate');
-            const orderDetailsList = document.getElementById('orderDetailsList');
-        
-            // Populate Modal Data
-            confirmOrderButton.addEventListener('click', function () {
-                // Populate order details list
-                const productInputs = document.querySelectorAll('input[name="products[]"]');
-                orderDetailsList.innerHTML = '';
-                productInputs.forEach(productInput => {
-                    const product = JSON.parse(productInput.value);
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `Product: ${product.title} - ₱${product.price} x ${product.quantity}`;
-                    orderDetailsList.appendChild(listItem);
-                });
-        
-                // Get the selected shipping option (Pick-Up or Cash on Delivery)
-                const shippingOption = document.querySelector('input[name="shipping"]:checked').value;
+        const confirmOrderButton = document.getElementById('confirmOrderButton');
+        const modalMeetupLocation = document.getElementById('modalMeetupLocation');
+        const modalDeliveryDate = document.getElementById('modalDeliveryDate');
+        const modalPickupLocation = document.getElementById('modalPickupLocation');
+        const modalPickupDate = document.getElementById('modalPickupDate');
+        const orderDetailsList = document.getElementById('orderDetailsList');
+        const modalTotal = document.getElementById('modalTotal'); // Element to display the total in the modal
 
-                // Check if Pick-Up is selected
-                if (shippingOption === '0') {
-                    // Display the store address for Pick-Up
-                    const storeAddress = document.querySelector('#store-address p')?.textContent || 'N/A';
-                    modalPickupLocation.textContent = storeAddress;
-
-                    // Get and display the pickup time
-                    modalPickupDate.textContent = document.getElementById('pickup-time-input').value || 'N/A';
-                    
-                    // Hide delivery-related info (since Pick-Up is selected)
-                    modalMeetupLocation.textContent = 'N/A'; 
-                    modalDeliveryDate.textContent = 'N/A';
-                } 
-                // Check if Cash on Delivery (COD) is selected
-                else if (shippingOption === '50') {
-                    // Display the meetup location for COD
-                    modalMeetupLocation.textContent = document.getElementById('location').value || 'N/A';
-
-                    // Display the delivery date
-                    modalDeliveryDate.textContent = document.getElementById('delivery-date').value || 'N/A';
-                    
-                    // Hide pickup-related info (since COD is selected)
-                    modalPickupLocation.textContent = 'N/A';
-                    modalPickupDate.textContent = 'N/A';
-                }
-
-
+        // Populate Modal Data
+        confirmOrderButton.addEventListener('click', function () {
+            // Populate order details list
+            const productInputs = document.querySelectorAll('input[name="products[]"]');
+            orderDetailsList.innerHTML = '';
+            productInputs.forEach(productInput => {
+                const product = JSON.parse(productInput.value);
+                const listItem = document.createElement('li');
+                listItem.textContent = `Product: ${product.title} - ₱${product.price} x ${product.quantity}`;
+                orderDetailsList.appendChild(listItem);
             });
+
+            // Get the selected shipping option (Pick-Up or Cash on Delivery)
+            const shippingOption = document.querySelector('input[name="shipping"]:checked').value;
+
+            // Check if Pick-Up is selected
+            if (shippingOption === '0') {
+                // Display the store address for Pick-Up
+                const storeAddress = document.querySelector('#store-address p')?.textContent || 'N/A';
+                modalPickupLocation.textContent = storeAddress;
+
+                // Get and display the pickup time
+                modalPickupDate.textContent = document.getElementById('pickup-time-input').value || 'N/A';
+                
+                // Hide delivery-related info (since Pick-Up is selected)
+                modalMeetupLocation.textContent = 'N/A'; 
+                modalDeliveryDate.textContent = 'N/A';
+            } 
+            // Check if Cash on Delivery (COD) is selected
+            else if (shippingOption === '50') {
+                // Display the meetup location for COD
+                modalMeetupLocation.textContent = document.getElementById('location').value || 'N/A';
+
+                // Display the delivery date
+                modalDeliveryDate.textContent = document.getElementById('delivery-date').value || 'N/A';
+                
+                // Hide pickup-related info (since COD is selected)
+                modalPickupLocation.textContent = 'N/A';
+                modalPickupDate.textContent = 'N/A';
+            }
+
+            // Retrieve and display the total amount in the modal
+            const totalElement = document.getElementById('total'); // Element displaying the total on the page
+            const totalValue = totalElement.textContent.trim();
+            modalTotal.textContent = totalValue; // Set the modal total
         });
+    });
 
         let map;
 let marker;
@@ -418,6 +428,61 @@ function fetchSuggestions() {
         suggestionsList.style.display = "none";
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+        const confirmOrderButton = document.getElementById('confirmOrderButton');
+        const validationMessage = document.getElementById('validation-message');
+        const meetupLocationInput = document.getElementById('location');
+        const deliveryDateInput = document.getElementById('delivery-date');
+        const pickupTimeInput = document.getElementById('pickup-time-input');
+        const storeAddressDiv = document.getElementById('store-address');
+
+        // Function to check if inputs are filled
+        function validateInputs() {
+            let message = ""; // Default empty message
+
+            // Check if pick-up location and delivery date are provided
+            const isMeetupLocationProvided = meetupLocationInput.value.trim() !== '';
+            const isDeliveryDateProvided = deliveryDateInput.value.trim() !== '';
+
+            // Check if store address is visible (default selected) and pickup time is provided
+            const isStoreAddressVisible = storeAddressDiv.style.display !== 'none';
+            const isPickupTimeProvided = pickupTimeInput.value.trim() !== '';
+
+            // Validation logic
+            if (!isStoreAddressVisible) {
+                if (!isMeetupLocationProvided) {
+                    message = "Please enter a meetup location.";
+                } else if (!isDeliveryDateProvided) {
+                    message = "Please select a delivery date.";
+                }
+            } else if (isStoreAddressVisible && !isPickupTimeProvided) {
+                message = "Please select a pick-up time.";
+            }
+
+            // Show/hide validation message
+            if (message) {
+                validationMessage.textContent = message;
+                validationMessage.style.display = "block";
+                confirmOrderButton.disabled = true;
+            } else {
+                validationMessage.style.display = "none";
+                confirmOrderButton.disabled = false;
+            }
+        }
+
+        // Run validation on page load to enable button if default selections are valid
+        validateInputs();
+
+        // Attach input event listeners to validate in real-time
+        meetupLocationInput.addEventListener('input', validateInputs);
+        deliveryDateInput.addEventListener('input', validateInputs);
+        pickupTimeInput.addEventListener('input', validateInputs);
+
+        // Optionally, listen for changes in visibility of store address or other sections
+        const observer = new MutationObserver(validateInputs);
+        observer.observe(storeAddressDiv, { attributes: true, attributeFilter: ['style'] });
+    });
 
         </script>
         
